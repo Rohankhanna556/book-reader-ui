@@ -1,40 +1,41 @@
-// BookDetail.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { books } from "../mock/data";
+import { getBook, getChapters } from "../services/bookService";
 import ChapterList from "./ChapterList";
 import ChapterReader from "./ChapterReader";
-import FavoriteButton from "./FavoriteButton";
-import Comments from "./Comments";
-import Reviews from "./Reviews";
-import Ratings from "./Ratings";
 
 function BookDetail() {
   const { bookId } = useParams();
-  const book = books.find(b => b.bookId === bookId);
+  const [book, setBook] = useState(null);
+  const [chapters, setChapters] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(null);
 
-  if (!book) return <p>Book not found</p>;
+  useEffect(() => {
+    getBook(bookId).then(setBook);
+    getChapters(bookId).then(setChapters);
+  }, [bookId]);
+
+  if (!book) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>{book.title}</h1>
-      <img src={book.cover} alt={book.title} style={{ width: "200px", borderRadius: "8px" }} />
+    <div>
+      <h2>{book.title}</h2>
       <p>Visibility: {book.visibility}</p>
-      <FavoriteButton bookId={bookId} onToggle={() => {}} />
-{!selectedChapter ? (
-  <ChapterList chapters={book.chapters} onSelect={setSelectedChapter} />
-) : (
-  <ChapterReader
-    bookId={bookId}
-    chapterId={selectedChapter}
-    onBack={() => setSelectedChapter(null)} // go back to chapter list
-  />
-)}
+      <p>Views: {book.views}</p>
+      <p>Popularity: {book.popularity}</p>
 
-      <Ratings bookId={bookId} onRate={() => {}} />
-      <Reviews bookId={bookId} />
-      <Comments bookId={bookId} />
+      {selectedChapter ? (
+        <ChapterReader
+          bookId={bookId}
+          chapterId={selectedChapter}
+          onBack={() => setSelectedChapter(null)}
+        />
+      ) : (
+        <ChapterList
+          chapters={chapters}
+          onSelect={(chapterId) => setSelectedChapter(chapterId)}
+        />
+      )}
     </div>
   );
 }

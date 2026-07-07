@@ -1,4 +1,3 @@
-// ChapterList.js
 import React from "react";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 
@@ -14,7 +13,7 @@ function ChapterList({ chapters, onSelect }) {
           >
             <ListItemText
               primary={`Chapter ${index + 1}: ${chapter.title}`}
-              secondary={`${chapter.pages.length} pages`}
+              secondary={`Created: ${chapter.createdAt}`}
             />
           </ListItemButton>
         ))}

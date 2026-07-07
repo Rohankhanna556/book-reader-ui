@@ -1,25 +1,23 @@
-// App.js
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import Profile from "./pages/Profile";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import BookList from "./components/BookList";
 import BookDetail from "./components/BookDetail";
 
 function App() {
   return (
     <Router>
-      <header style={{ background: "#3f51b5", padding: "10px", color: "white" }}>
-        <h1 style={{ cursor: "pointer" }}>
-          <Link to="/" style={{ color: "white", textDecoration: "none" }}>📚 Book Reader</Link>
-        </h1>
-        <nav>
-          <Link to="/" style={{ margin: "0 10px", color: "white" }}>Home</Link>
-          <Link to="/profile" style={{ margin: "0 10px", color: "white" }}>Profile</Link>
-        </nav>
-      </header>
-
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
+        {/* Redirect root to login */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Auth routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Book routes */}
+        <Route path="/books" element={<BookList />} />
         <Route path="/books/:bookId" element={<BookDetail />} />
       </Routes>
     </Router>

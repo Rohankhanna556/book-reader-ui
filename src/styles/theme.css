@@ -31,14 +31,30 @@ nav button:hover {
   background: #00796b;
 }
 
-.book-card {
-  background: #3f51b5;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  cursor: pointer;
-  border-radius: 4px;
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
 }
+
+.book-card {
+  flex: 0 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.book-cover {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
 
 .reader img, .pdf-viewer canvas {
   max-width: 80%;

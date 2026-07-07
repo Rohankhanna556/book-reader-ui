@@ -1,25 +1,25 @@
-import React, { useEffect } from "react";
-import { books } from "../mock/data";
+import React, { useEffect, useState } from "react";
+import { getChapter, getPages } from "../services/bookService";
 import Breadcrumb from "./Breadcrumb";
 
 function ChapterReader({ bookId, chapterId, onBack }) {
-  const book = books.find(b => b.bookId === bookId);
-  const chapter = book.chapters.find(c => c.chapterId === chapterId);
+  const [chapter, setChapter] = useState(null);
+  const [pages, setPages] = useState([]);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // always start at top
+    getChapter(chapterId).then(setChapter);
+    getPages(chapterId).then(setPages);
+    window.scrollTo(0, 0);
   }, [chapterId]);
 
-  const handleGoUp = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  if (!chapter) return <div>Loading...</div>;
 
   return (
     <div className="reader">
-<Breadcrumb bookTitle={book.title} chapterTitle={chapter.title} />
+      <Breadcrumb bookTitle={chapter.title} chapterTitle={chapter.title} />
       <button onClick={onBack} className="back-btn">⬅ Back</button>
 
-      {chapter.pages.map((page, index) => (
+      {pages.map((page, index) => (
         <img
           key={page.pageId}
           src={page.imageUrl}
@@ -28,7 +28,7 @@ function ChapterReader({ bookId, chapterId, onBack }) {
         />
       ))}
 
-<button onClick={onBack} className="back-btn">⬅ Back to Chapters</button>
+      <button onClick={onBack} className="back-btn">⬅ Back to Chapters</button>
     </div>
   );
 }
