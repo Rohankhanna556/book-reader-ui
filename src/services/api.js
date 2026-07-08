@@ -7,12 +7,12 @@ export const authApi = axios.create({
 
 // User service (register, validate)
 export const userApi = axios.create({
-  baseURL: "http://localhost:8081/api/users"
+  baseURL: "http://localhost:8464/user/api/users"
 });
 
-// Book service (protected endpoints)
+// Book service (protected endpoints via gateway)
 export const bookApi = axios.create({
-  baseURL: "http://localhost:8464"
+  baseURL: "http://localhost:8464/book/api"
 });
 
 // Attach JWT to protected requests

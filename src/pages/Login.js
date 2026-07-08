@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { authApi } from "../services/api";
-import "./Auth.css"; // shared styles
+import {
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Stack
+} from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
 
 function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -11,15 +20,9 @@ function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      // ✅ Correct path: /login (baseURL already has /api/auth)
-      const res = await authApi.post("/login", {
-        username: form.username,
-        password: form.password
-      });
-
+      const res = await authApi.post("/login", form);
       if (res.data && res.data !== "Invalid credentials") {
-        alert("Login successful!");
-        localStorage.setItem("token", res.data); // store JWT
+        localStorage.setItem("token", res.data);
         window.location.href = "/books";
       } else {
         alert("Invalid credentials");
@@ -29,30 +32,53 @@ function Login() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8464/oauth2/authorization/google";
+  };
+
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Welcome Back</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="username"
-            placeholder="Username"
-            value={form.username}
-            onChange={handleChange}
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-          />
-          <button type="submit">Login</button>
-        </form>
-        <button className="google-btn">Sign in with Google</button>
-        <p>Don't have an account? <Link to="/register">Register here</Link></p>
-      </div>
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Card elevation={6}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            Welcome Back
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={2}>
+              <TextField
+                label="Username"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                fullWidth
+              />
+              <TextField
+                label="Password"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                fullWidth
+              />
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Login
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<GoogleIcon />}
+                onClick={handleGoogleLogin}
+                fullWidth
+              >
+                Sign in with Google
+              </Button>
+            </Stack>
+          </form>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Don’t have an account? <Link to="/register">Register here</Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 

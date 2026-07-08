@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { userApi } from "../services/api";
-import "./Auth.css"; // shared styles
+import {
+  Container, Card, CardContent, Typography,
+  TextField, Button, Stack
+} from "@mui/material";
 
 function Register() {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const prefillEmail = params.get("email");
+
+  const [form, setForm] = useState({
+    username: "",
+    email: prefillEmail || "",
+    password: ""
+  });
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      // ✅ Correct path: /register (baseURL already has /api/users)
       const res = await userApi.post("/register", form);
       alert("Registered successfully: " + res.data.username);
       window.location.href = "/login";
@@ -21,19 +31,36 @@ function Register() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Create Account</h2>
-        <form onSubmit={handleSubmit}>
-          <input name="username" placeholder="Username" onChange={handleChange} />
-          <input name="email" placeholder="Email" onChange={handleChange} />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} />
-          <button type="submit">Register</button>
-        </form>
-        <button className="google-btn">Sign in with Google</button>
-        <p>Already registered? <Link to="/login">Login here</Link></p>
-      </div>
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Card elevation={6}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            Create Account
+          </Typography>
+          {prefillEmail && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              We didn’t find an account for {prefillEmail}. Please register to continue.
+            </Typography>
+          )}
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={2}>
+              <TextField label="Username" name="username"
+                value={form.username} onChange={handleChange} fullWidth />
+              <TextField label="Email" name="email"
+                value={form.email} onChange={handleChange} fullWidth />
+              <TextField label="Password" type="password" name="password"
+                value={form.password} onChange={handleChange} fullWidth />
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Register
+              </Button>
+            </Stack>
+          </form>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Already registered? <Link to="/login">Login here</Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
