@@ -23,7 +23,7 @@ function Header() {
         <Typography
           variant="h6"
           sx={{ flexGrow: 1, cursor: "pointer" }}
-          onClick={() => navigate("/books")}   // or use navigate("/") if you want root
+          onClick={() => navigate("/")}
         >
           MangaFire Clone
         </Typography>
@@ -43,23 +43,37 @@ function Header() {
             <AccountCircle />
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                navigate("/profile");
-              }}
-            >
-              Profile
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                localStorage.removeItem("token");
-                navigate("/login");
-              }}
-            >
-              Logout
-            </MenuItem>
+            {user ? (
+              <>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate("/profile");
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    localStorage.removeItem("token");
+                    setUser(null);          // clear user state
+                    navigate("/");          // go back to home (public books list)
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </>
+            ) : (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate("/login");
+                }}
+              >
+                Login
+              </MenuItem>
+            )}
           </Menu>
         </div>
       </Toolbar>

@@ -8,6 +8,9 @@ import Profile from "./pages/Profile";
 import BookList from "./components/BookList";
 import BookDetail from "./components/BookDetail";
 import ChapterReader from "./components/ChapterReader";
+import BookManagement from "./components/BookManagement";
+import ChapterManagement from "./components/ChapterManagement";
+import PageManagement from "./components/PageManagement";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<BookManagement />} />
+        <Route path="/book/:bookId" element={<ChapterManagement />} />
+        <Route path="/book/:bookId/chapter/:chapterId" element={<PageManagement />} />
       </Routes>
     </Router>
   );
