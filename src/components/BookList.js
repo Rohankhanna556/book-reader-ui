@@ -1,43 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { getBooks } from "../services/bookService";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function Home() {
+function BookList() {
   const [books, setBooks] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Capture token from URL
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-    if (token) {
-      localStorage.setItem("token", token);
-      navigate("/home"); // clean URL (remove ?token=...)
-    }
-
-    // Fetch books
-    getBooks()
-      .then(setBooks)
-      .catch(err => console.error("Failed to load books", err));
-  }, [navigate]);
+    getBooks().then(setBooks).catch(err => console.error("Error loading books", err));
+  }, []);
 
   return (
-    <div className="book-list">
-      <h2>Books</h2>
-      {books.length === 0 ? (
-        <p>No books found or loading...</p>
-      ) : (
-        books.map(book => (
-          <Link key={book.bookId} to={`/books/${book.bookId}`}>
-            <div className="book-card">
-              <img src={book.coverLink} alt={book.title} className="book-cover" />
-              <h3>{book.title}</h3>
-            </div>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+      {books.map(book => (
+        <div key={book.bookId} style={{ width: "200px", textAlign: "center" }}>
+          <Link to={`/books/${book.bookId}`}>
+            <img
+              src={book.coverLink}
+              alt={book.title}
+              style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+            />
+            <h4>{book.title}</h4>
           </Link>
-        ))
-      )}
+          <p>Views: {book.views}</p>
+          <p>Popularity: {book.popularity}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
-export default Home;
+export default BookList;

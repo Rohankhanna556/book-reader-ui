@@ -1,22 +1,15 @@
 import axios from "axios";
 
-// Auth service (login)
-export const authApi = axios.create({
-  baseURL: "http://localhost:8464/api/auth"
-});
+const BASE_URL = "http://localhost:8464"; // Gateway base
 
-// User service (register, validate)
-export const userApi = axios.create({
-  baseURL: "http://localhost:8464/user/api/users"
-});
+export const authApi = axios.create({ baseURL: `${BASE_URL}/api/auth` });
+export const userApi = axios.create({ baseURL: `${BASE_URL}/user/api/users` });
+export const bookApi = axios.create({ baseURL: `${BASE_URL}/book/api/books` });
+export const chapterApi = axios.create({ baseURL: `${BASE_URL}/book/api/chapters` });
+export const pageApi = axios.create({ baseURL: `${BASE_URL}/book/api/pages` });
 
-// Book service (protected endpoints via gateway)
-export const bookApi = axios.create({
-  baseURL: "http://localhost:8464/book/api"
-});
-
-// Attach JWT to protected requests
-[bookApi, userApi].forEach(api => {
+// Attach token to all requests
+[authApi, userApi, bookApi, chapterApi, pageApi].forEach(api => {
   api.interceptors.request.use(config => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -25,3 +18,6 @@ export const bookApi = axios.create({
     return config;
   });
 });
+
+// Profile helper
+export const getProfile = () => authApi.get("/me").then(res => res.data);

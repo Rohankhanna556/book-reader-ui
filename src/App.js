@@ -1,29 +1,26 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Register from "./pages/Register";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Home from "./pages/Home";        // renamed BookList to Home
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import BookList from "./components/BookList";
 import BookDetail from "./components/BookDetail";
+import ChapterReader from "./components/ChapterReader";
 
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
-        {/* Redirect root to login */}
-        <Route path="/" element={<Navigate to="/login" />} />
-
-        {/* Auth routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/books" element={<BookList />} />
+        <Route path="/books/:id" element={<BookDetail />} />
+        <Route path="/chapters/:chapterId" element={<ChapterReader />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Home route (after Google login) */}
-        <Route path="/home" element={<Home />} />
-
-        {/* Book detail route */}
-        <Route path="/books/:bookId" element={<BookDetail />} />
-
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

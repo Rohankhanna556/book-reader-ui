@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { getChapter, getPages } from "../services/bookService";
-import Breadcrumb from "./Breadcrumb";
+import { useParams } from "react-router-dom";
+import { getPages } from "../services/bookService";
 
-function ChapterReader({ bookId, chapterId, onBack }) {
-  const [chapter, setChapter] = useState(null);
+function ChapterReader() {
+  const { chapterId } = useParams();
   const [pages, setPages] = useState([]);
 
   useEffect(() => {
-    getChapter(chapterId).then(setChapter);
-    getPages(chapterId).then(setPages);
-    window.scrollTo(0, 0);
+    if (chapterId) {
+      getPages(chapterId)
+        .then(setPages)
+        .catch(err => console.error("Error loading pages", err));
+    }
   }, [chapterId]);
 
-  if (!chapter) return <div>Loading...</div>;
-
   return (
-    <div className="reader">
-      <Breadcrumb bookTitle={chapter.title} chapterTitle={chapter.title} />
-      <button onClick={onBack} className="back-btn">⬅ Back</button>
-
-      {pages.map((page, index) => (
-        <img
-          key={page.pageId}
-          src={page.imageUrl}
-          alt={`Page ${index + 1}`}
-          className={`page ${page.orientation}`}
-        />
-      ))}
-
-      <button onClick={onBack} className="back-btn">⬅ Back to Chapters</button>
+    <div style={{ padding: "20px" }}>
+      <h3>Chapter Pages</h3>
+      {pages.length === 0 ? (
+        <p>No pages available</p>
+      ) : (
+        pages.map(pg => (
+          <img
+            key={pg.id}
+            src={pg.imageUrl}
+            alt={`Page ${pg.id}`}
+            style={{ width: "100%", marginBottom: "10px" }}
+          />
+        ))
+      )}
     </div>
   );
 }

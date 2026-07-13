@@ -1,23 +1,22 @@
-import React from "react";
-import { List, ListItemButton, ListItemText } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { getChapters } from "../services/bookService";
+import { Link } from "react-router-dom";
 
-function ChapterList({ chapters, onSelect }) {
+function ChapterList({ bookId }) {
+  const [chapters, setChapters] = useState([]);
+
+  useEffect(() => {
+    getChapters(bookId).then(setChapters);
+  }, [bookId]);
+
   return (
-    <div className="chapter-list">
-      <h2>Chapters</h2>
-      <List>
-        {chapters.map((chapter, index) => (
-          <ListItemButton
-            key={chapter.chapterId}
-            onClick={() => onSelect(chapter.chapterId)}
-          >
-            <ListItemText
-              primary={`Chapter ${index + 1}: ${chapter.title}`}
-              secondary={`Created: ${chapter.createdAt}`}
-            />
-          </ListItemButton>
-        ))}
-      </List>
+    <div>
+      <h3>Chapters</h3>
+      {chapters.map(ch => (
+        <div key={ch.id}>
+          <Link to={`/chapters/${ch.id}`}>{ch.title}</Link>
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,17 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import BookList from "../components/BookList";
-import BookDetail from "../components/BookDetail";
 
-function Home({ onSelectBook }) {
-  const [selectedBook, setSelectedBook] = useState(null);
-
+function Home() {
   return (
-    <div className="home">
-      {!selectedBook ? (
-        <BookList onSelect={setSelectedBook} />
-      ) : (
-        <BookDetail bookId={selectedBook} onFavoriteToggle={() => {}} />
-      )}
+    <div style={{ padding: "20px" }}>
+      <h2>Book Reader</h2>
+      <BookList />
     </div>
   );
 }
